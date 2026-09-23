@@ -2,9 +2,19 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Windows.Forms;
+
+
+[assembly: AssemblyTitle("Audient iD 4.4.2 PollFix")]
+[assembly: AssemblyDescription("Unofficial community workaround for the Audient iD Software 4.4.2 USB polling/logging issue")]
+[assembly: AssemblyProduct("Audient iD 4.4.2 PollFix")]
+[assembly: AssemblyCompany("Community Tool")]
+[assembly: AssemblyCopyright("Community project")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
 
 namespace AudientPollFix
 {
@@ -42,6 +52,7 @@ namespace AudientPollFix
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             Font = new Font("Segoe UI", 9F);
+            try { Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath); } catch { }
 
             Label title = new Label();
             title.Text = "Audient iD 4.4.2 PollFix";
