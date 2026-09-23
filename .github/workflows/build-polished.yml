@@ -1,0 +1,36 @@
+name: Build polished PollFix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/build-polished.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Decode icon
+        shell: powershell
+        run: |
+          $b64 = (Get-Content -Raw 'src/PollFix.ico.b64').Trim()
+          [IO.File]::WriteAllBytes('src/PollFix.ico', [Convert]::FromBase64String($b64))
+
+      - name: Compile
+        shell: cmd
+        run: |
+          "%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /target:winexe /optimize+ /platform:anycpu /reference:System.dll /reference:System.Core.dll /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /win32manifest:src\app.manifest /win32icon:src\PollFix.ico /out:Audient-iD-4.4.2-PollFix.exe src\AudientPollFix.cs
+
+      - name: Publish executable and remove temporary workflow
+        shell: powershell
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Audient-iD-4.4.2-PollFix.exe
+          git rm .github/workflows/build-polished.yml
+          git commit -m "Polish PollFix executable icon and metadata"
+          git push
